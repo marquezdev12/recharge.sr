@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Données utilisateur - TicketStore</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+      const purchasePre = document.getElementById('purchaseData');
+      const activationPre = document.getElementById('activationData');
+      const clearBtn = document.getElementById('clearBtn');
+      const paymentPre = document.getElementById('paymentData');
+      function render() {
+        try {
+          const p = JSON.parse(localStorage.getItem('ts_last_purchase') || 'null');
+          const a = JSON.parse(localStorage.getItem('ts_last_activation') || 'null');
+          const pay = JSON.parse(localStorage.getItem('ts_last_payment') || 'null');
+          purchasePre.textContent = p ? JSON.stringify(p, null, 2) : 'Aucune donnée de commande.';
+          activationPre.textContent = a ? JSON.stringify(a, null, 2) : 'Aucune donnée d’activation.';
+          paymentPre.textContent = pay ? JSON.stringify(pay, null, 2) : 'Aucune donnée de paiement.';
+        } catch (_) {
+          purchasePre.textContent = 'Erreur de lecture.';
+          activationPre.textContent = 'Erreur de lecture.';
+          paymentPre.textContent = 'Erreur de lecture.';
+        }
+      }
+      render();
+      clearBtn.addEventListener('click', () => {
+        localStorage.removeItem('ts_last_purchase');
+        localStorage.removeItem('ts_last_activation');
+        localStorage.removeItem('ts_last_payment');
+        render();
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><img src="img/logo.svg" alt="TicketStore" />TicketStore</div>
+      <div class="nav-wrap">
+        <button id="navToggle" class="nav-toggle" aria-label="Ouvrir le menu">Menu</button>
+        <nav class="nav" role="navigation" aria-label="Navigation principale">
+          <a href="index.html">Accueil</a>
+          <a href="purchase.html">Acheter</a>
+          <a href="activate.html">Activer</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="form-grid">
+      <div class="form-card">
+        <h2>Données d’achat (dernière soumission)</h2>
+        <pre id="purchaseData" class="form-card" style="overflow:auto; max-height:260px;"></pre>
+      </div>
+      <div class="form-card">
+        <h2>Données d’activation (dernière soumission)</h2>
+        <pre id="activationData" class="form-card" style="overflow:auto; max-height:260px;"></pre>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Données de paiement (dernière soumission)</h3>
+      <pre id="paymentData" class="form-card" style="overflow:auto; max-height:260px;"></pre>
+    </section>
+
+    <section class="section">
+      <button id="clearBtn" class="btn">Effacer les données</button>
+      <a class="btn secondary small" href="index.html" style="margin-left:8px;">Retour</a>
+    </section>
+
+    <footer class="footer">© TicketStore</footer>
+  </div>
+</body>
+</html>
+
+

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Merci - TicketStore</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const countdownEl = document.getElementById('countdown');
+      let n = 5;
+      const iv = setInterval(() => {
+        n -= 1;
+        if (countdownEl) countdownEl.textContent = n.toString();
+        if (n <= 0) {
+          clearInterval(iv);
+          window.location.href = 'index.html';
+        }
+      }, 1000);
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><img src="img/logo.svg" alt="TicketStore" />TicketStore</div>
+      <div class="nav-wrap">
+        <button id="navToggle" class="nav-toggle" aria-label="Ouvrir le menu">Menu</button>
+        <nav class="nav" role="navigation" aria-label="Navigation principale">
+          <a href="index.html">Accueil</a>
+          <a href="purchase.html">Acheter</a>
+          <a href="activate.html">Activer</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>Merci pour votre confiance</h2>
+      <p style="color:#334155;">Votre code a été activé avec succès. Vous allez être redirigé vers l’accueil dans <strong id="countdown">5</strong> secondes.</p>
+      <p style="margin-top:10px;"><a class="btn" href="index.html">Retour immédiat</a></p>
+    </section>
+
+    <footer class="footer">© TicketStore</footer>
+  </div>
+</body>
+</html>
+
+

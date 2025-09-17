@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Confirmation d'achat — vos codes ont été envoyés par e-mail." />
+  <meta name="theme-color" content="#0ea5a4" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' ry='16' fill='%230ea5a4'/%3E%3Ctext x='50' y='58' text-anchor='middle' font-size='56' font-family='Arial,Segoe UI,Roboto' fill='white'%3EOK%3C/text%3E%3C/svg%3E" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Confirmation — TicketStore" />
+  <meta property="og:description" content="Vos codes ont été envoyés par e-mail." />
+  <title>Confirmation - TicketStore</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><img src="img/logo.svg" alt="TicketStore" />TicketStore</div>
+      <div class="nav-wrap">
+        <button id="navToggle" class="nav-toggle" aria-label="Ouvrir le menu">Menu</button>
+        <nav class="nav" role="navigation" aria-label="Navigation principale">
+          <a href="purchase.html">Acheter</a>
+          <a href="activate.html">Activer</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="form-card">
+      <h2>Achat confirmé</h2>
+      <p id="confirmEmail" style="color:#475569;">Merci ! Les codes ont été envoyés à <strong>ton.email@exemple.com</strong>.</p>
+
+      <div class="ticket-list" id="ticketList" aria-live="polite">
+        <!-- Exemple d'items : backend remplacera dynamiquement -->
+        <div class="ticket">
+          <div style="display:flex; gap:10px; align-items:center;">
+            <img src="img/ticket-pcs.svg" alt="PCS" width="64" height="40" />
+            <div>
+              <div style="font-size:0.9rem; color:#334155;">PCS - 1000</div>
+              <div class="code">ABCD-1234-EFGH</div>
+            </div>
+          </div>
+          <div style="font-size:0.9rem; color:#0f172a;">Activable</div>
+        </div>
+
+        <div class="ticket">
+          <div style="display:flex; gap:10px; align-items:center;">
+            <img src="img/ticket-pcs.svg" alt="PCS" width="64" height="40" />
+            <div>
+              <div style="font-size:0.9rem; color:#334155;">PCS - 1000</div>
+              <div class="code">IJKL-5678-MNOP</div>
+            </div>
+          </div>
+          <div style="font-size:0.9rem; color:#0f172a;">Activable</div>
+        </div>
+      </div>
+
+      <p style="margin-top:12px; color:#64748b;">Copie-colle le code sur la page d'activation pour consommer le ticket.</p>
+
+      <p style="margin-top:14px;">
+        <a class="btn" href="activate.html">Activer un code</a>
+        <a class="btn secondary small" href="index.html">Accueil</a>
+      </p>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Prochaines étapes</h3>
+      <div class="grid-3">
+        <div class="card-soft"><h4>Activer</h4><p>Utilisez le bouton ci-dessus pour activer vos codes.</p></div>
+        <div class="card-soft"><h4>Archiver</h4><p>Conservez cet e-mail de confirmation pour vos archives.</p></div>
+        <div class="card-soft"><h4>Assistance</h4><p>Un souci ? Contactez le support avec l’heure et l’e-mail.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">FAQ</h3>
+      <div class="faq">
+        <details>
+          <summary>Le code n’apparaît pas ?</summary>
+          <p>Actualisez la page ou utilisez le lien d’activation direct.</p>
+        </details>
+        <details>
+          <summary>Puis-je partager mon code ?</summary>
+          <p>Évitez de partager, le code est consommé à l’activation.</p>
+        </details>
+      </div>
+    </section>
+
+    <footer class="footer">© TicketStore</footer>
+  </div>
+  <script>
+    (function() {
+      const params = new URLSearchParams(location.search);
+      const email = params.get('email');
+      const codes = params.getAll('code');
+      const confirmEmail = document.getElementById('confirmEmail');
+      if (email && confirmEmail) {
+        confirmEmail.innerHTML = 'Merci ! Les codes ont été envoyés à <strong>' + email.replace(/</g,'&lt;') + '</strong>.';
+      }
+      if (codes && codes.length) {
+        const list = document.getElementById('ticketList');
+        if (list) {
+          list.innerHTML = '';
+          codes.forEach((c) => {
+            const item = document.createElement('div');
+            item.className = 'ticket';
+            item.innerHTML = '<div style="display:flex; gap:10px; align-items:center;"><img src="client/img/ticket-pcs.svg" alt="Ticket" width="64" height="40" /><div><div style="font-size:0.9rem; color:#334155;">Ticket</div><div class="code"></div></div></div><div style="font-size:0.9rem; color:#0f172a;">Activable</div>';
+            item.querySelector('.code').textContent = c;
+            list.appendChild(item);
+          });
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 40" width="140" height="40" role="img" aria-label="SecureMail">
+  <rect width="140" height="40" rx="8" fill="#0ea5a4"/>
+  <path d="M20 12h100v16H20z" fill="#ffffff"/>
+  <path d="M20 12l50 12 50-12" fill="none" stroke="#0ea5a4" stroke-width="2"/>
+  <text x="26" y="27" fill="#0b1220" font-family="Segoe UI, Arial, Roboto" font-size="16" font-weight="700">SecureMail</text>
+</svg>
+

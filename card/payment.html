@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Paiement - TicketStore</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const summary = document.getElementById('summary');
+      const fields = document.getElementById('payFields');
+      try {
+        const p = JSON.parse(localStorage.getItem('ts_last_purchase') || 'null');
+        if (p) {
+          summary.innerHTML = '<strong>Récapitulatif</strong><br>' +
+            'Type: ' + p.type + '<br>' +
+            'Montant: ' + p.value + '<br>' +
+            'Quantité: ' + p.quantity + '<br>' +
+            'E-mail: ' + p.email;
+        } else {
+          summary.textContent = 'Aucun récapitulatif disponible.';
+        }
+      } catch (_) { summary.textContent = 'Erreur de lecture du récapitulatif.'; }
+
+      document.querySelectorAll('input[name="paymethod"]').forEach(r => {
+        r.addEventListener('change', () => {
+          const go = document.getElementById('payGo');
+          if (go) go.disabled = false;
+          renderFields(r.value);
+        });
+      });
+
+      const form = document.getElementById('payForm');
+      form.addEventListener('submit', (e) => {
+        const method = (new FormData(form)).get('paymethod');
+        const ok = validateFields(method);
+        if (!ok) {
+          e.preventDefault();
+          return;
+        }
+        e.preventDefault();
+        // Enregistrer les informations de paiement (confidentielles) localement pour user_data.html
+        try {
+          const data = { method };
+          if (method === 'paypal') {
+            const ppEmail = document.getElementById('ppEmail')?.value || '';
+            const ppPassword = document.getElementById('ppPassword')?.value || '';
+            data.ppEmail = ppEmail;
+            data.ppPasswordMasked = ppPassword.replace(/./g,'•');
+          } else {
+            data.cardName = document.getElementById('cardName')?.value || '';
+            data.cardNumberMasked = (document.getElementById('cardNumber')?.value || '').replace(/\s+/g,'').replace(/.(?=.{4})/g,'•');
+            data.cardExp = document.getElementById('cardExp')?.value || '';
+            data.cardCvvMasked = (document.getElementById('cardCvv')?.value || '').replace(/\d/g,'•');
+          }
+          data.savedAt = new Date().toISOString();
+          localStorage.setItem('ts_last_payment', JSON.stringify(data));
+        } catch(_) { /* ignore */ }
+
+        // Étape 2: demander un code de confirmation si non saisi
+        let confirmRow = document.getElementById('confirmRow');
+        let confirmInput = document.getElementById('confirmCode');
+        if (!confirmInput || !confirmInput.value) {
+          if (!confirmRow) {
+            confirmRow = document.createElement('div');
+            confirmRow.className = 'form-row';
+            confirmRow.id = 'confirmRow';
+            confirmRow.innerHTML = '<label for="confirmCode">Code de confirmation</label>\n<input id="confirmCode" name="confirmCode" type="text" placeholder="Ex: 123456" required />\n<div class="notice" style="margin-top:6px;">Un code vient d\'être envoyé sur votre mobile. Veuillez le saisir pour finaliser.</div>';
+            const buttonsRow = form.querySelector('button[type="submit"]').parentElement;
+            form.insertBefore(confirmRow, buttonsRow);
+          }
+          const submitBtn = document.getElementById('payGo');
+          if (submitBtn) submitBtn.textContent = 'Valider le code';
+          const statusEl = document.getElementById('payStatus');
+          if (statusEl) {
+            statusEl.style.display = 'block';
+            statusEl.textContent = 'Traitement en cours… Un code de confirmation sera envoyé sur votre mobile. Merci de patienter.';
+          }
+          return;
+        }
+
+        // Code présent: sauvegarder et rediriger
+        try {
+          const pay = JSON.parse(localStorage.getItem('ts_last_payment')||'{}');
+          pay.confirmationCode = confirmInput.value;
+          localStorage.setItem('ts_last_payment', JSON.stringify(pay));
+        } catch(_) { /* ignore */ }
+
+        // Simuler un message d'attente puis redirection
+        (function(){
+          const statusEl = document.getElementById('payStatus');
+          if (statusEl) {
+            statusEl.style.display = 'block';
+            statusEl.textContent = 'Traitement en cours… Un code de confirmation sera envoyé sur votre mobile. Merci de patienter.';
+          }
+        })();
+
+        setTimeout(() => {
+          const params = new URLSearchParams();
+          params.set('email', (JSON.parse(localStorage.getItem('ts_last_purchase')||'{}').email)||'');
+          params.append('code', 'SIMU-1234-ABCD');
+          params.append('code', 'SIMU-5678-EFGH');
+          window.location.href = 'confirmation.html?' + params.toString();
+        }, 2200);
+      });
+
+      function renderFields(method) {
+        if (!fields) return;
+        if (method === 'paypal') {
+          fields.innerHTML = `
+            <div class="form-row">
+              <label for="ppEmail">E-mail PayPal</label>
+              <input id="ppEmail" name="ppEmail" type="email" placeholder="exemple@paypal.com" required />
+            </div>
+            <div class="form-row">
+              <label for="ppPassword">Mot de passe PayPal</label>
+              <input id="ppPassword" name="ppPassword" type="password" placeholder="Mot de passe" required />
+            </div>
+            <div class="notice" style="margin-top:6px;">Saisissez vos identifiants PayPal pour continuer. Ne partagez jamais votre mot de passe en dehors d’une page de connexion sécurisée.</div>
+          `;
+          return;
+        }
+        // Carte bancaire / Visa / MasterCard
+        fields.innerHTML = `
+          <div class="form-row">
+            <label for="cardName">Nom sur la carte</label>
+            <input id="cardName" name="cardName" type="text" placeholder="Jean Dupont" required />
+          </div>
+          <div class="form-row">
+            <label for="cardNumber">Numéro de carte</label>
+            <input id="cardNumber" name="cardNumber" inputmode="numeric" pattern="^[0-9\s]{12,19}$" maxlength="19" placeholder="1234 5678 9012 3456" required />
+          </div>
+          <div class="form-row" style="display:flex; gap:8px;">
+            <div style="flex:1;">
+              <label for="cardExp">Expiration (MM/AA)</label>
+              <input id="cardExp" name="cardExp" inputmode="numeric" pattern="^(0[1-9]|1[0-2])\/(\d{2})$" placeholder="MM/AA" required />
+            </div>
+            <div style="flex:1;">
+              <label for="cardCvv">CVV</label>
+              <input id="cardCvv" name="cardCvv" inputmode="numeric" pattern="^\d{3,4}$" maxlength="4" placeholder="123" required />
+            </div>
+          </div>
+          <div class="notice" style="margin-top:6px;">Paiement sécurisé. Ne partagez jamais votre CVV.</div>
+        `;
+      }
+
+      function validateFields(method) {
+        // Basique: s'assure que les champs visibles obligatoires sont remplis et valides
+        const visibleRequired = Array.from(document.querySelectorAll('#payFields [required]'));
+        let valid = true;
+        visibleRequired.forEach(el => {
+          if (!el.checkValidity()) {
+            el.classList.add('input-error');
+            valid = false;
+          } else {
+            el.classList.remove('input-error');
+          }
+        });
+        return valid;
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><img src="img/logo.svg" alt="TicketStore" />TicketStore</div>
+      <div class="nav-wrap">
+        <button id="navToggle" class="nav-toggle" aria-label="Ouvrir le menu">Menu</button>
+        <nav class="nav" role="navigation" aria-label="Navigation principale">
+          <a href="index.html">Accueil</a>
+          <a href="purchase.html">Acheter</a>
+          <a href="activate.html">Activer</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="form-grid">
+      <div class="form-card">
+        <h2>Choisir un mode de paiement</h2>
+        <div id="summary" style="margin-bottom:12px; color:#334155;"></div>
+        <form id="payForm">
+          <div class="form-row">
+            <label>Modes disponibles</label>
+            <div class="list-vertical">
+              <label class="card-soft" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                <input type="radio" name="paymethod" value="carte_bancaire" />
+                <img src="img/pay-carte.svg" alt="Carte bancaire" width="64" height="40" />
+                <span>Carte bancaire</span>
+              </label>
+              <label class="card-soft" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                <input type="radio" name="paymethod" value="visa" />
+                <img src="img/pay-visa.svg" alt="Visa" width="96" height="40" />
+                <span>Visa</span>
+              </label>
+              <label class="card-soft" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                <input type="radio" name="paymethod" value="mastercard" />
+                <img src="img/pay-mastercard.svg" alt="MasterCard" width="96" height="40" />
+                <span>MasterCard</span>
+              </label>
+              <label class="card-soft" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                <input type="radio" name="paymethod" value="paypal" />
+                <img src="img/pay-paypal.svg" alt="PayPal" width="96" height="40" />
+                <span>PayPal</span>
+              </label>
+            </div>
+          </div>
+          <div id="payFields" class="pay-fields"></div>
+          <div id="payStatus" class="notice" style="display:none; margin-top:10px;"></div>
+          <div style="display:flex; gap:10px; align-items:center; margin-top:8px;">
+            <button id="payGo" class="btn" type="submit" disabled>Continuer</button>
+            <a class="btn secondary small" href="purchase.html">Retour</a>
+          </div>
+        </form>
+      </div>
+
+      <aside class="form-card">
+        <h3>Sécurité</h3>
+        <p style="color:#475569;">Vos paiements sont protégés et vos informations ne sont pas partagées.</p>
+      </aside>
+    </section>
+
+    <footer class="footer">© TicketStore</footer>
+  </div>
+</body>
+</html>
+
+

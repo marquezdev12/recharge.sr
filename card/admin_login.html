@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="description" content="Interface de connexion administrateur TicketStore." />
+  <meta name="theme-color" content="#0ea5a4" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' ry='16' fill='%230ea5a4'/%3E%3Ctext x='50' y='58' text-anchor='middle' font-size='56' font-family='Arial,Segoe UI,Roboto' fill='white'%3EAd%3C/text%3E%3C/svg%3E" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Admin — TicketStore" />
+  <meta property="og:description" content="Interface de connexion administrateur TicketStore." />
+  <title>Admin - TicketStore</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="container" style="max-width:520px;">
+    <header class="header">
+      <div class="brand"><img src="img/logo.svg" alt="TicketStore" />TicketStore — Admin</div>
+      <div class="nav-wrap">
+        <button id="navToggle" class="nav-toggle" aria-label="Ouvrir le menu">Menu</button>
+        <nav class="nav" role="navigation" aria-label="Navigation principale">
+          <a href="index.html">Visiteur</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="form-card">
+      <h2 id="adminLoginHeading">Connexion Administrateur</h2>
+      <form method="post" action="/api/admin/login" novalidate aria-labelledby="adminLoginHeading">
+        <div class="form-row">
+          <label for="adminEmail">E-mail</label>
+          <input id="adminEmail" name="email" type="email" required />
+        </div>
+
+        <div class="form-row">
+          <label for="adminPass">Mot de passe</label>
+          <input id="adminPass" name="password" type="password" required />
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button class="btn" type="submit">Se connecter</button>
+        </div>
+      </form>
+
+      <p style="margin-top:10px; color:#64748b; font-size:0.9rem;">Les routes admin doivent être protégées côté serveur.</p>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Bonnes pratiques de sécurité</h3>
+      <div class="grid-3">
+        <div class="card-soft"><h4>Mots de passe</h4><p>Utilisez un mot de passe long et unique, changez-le régulièrement.</p></div>
+        <div class="card-soft"><h4>Accès</h4><p>Ne partagez jamais vos identifiants et surveillez les connexions.</p></div>
+        <div class="card-soft"><h4>Support</h4><p>En cas de doute, contactez l’équipe: support@ticketstore.exemple</p></div>
+      </div>
+    </section>
+
+    <footer class="footer">© TicketStore</footer>
+  </div>
+</body>
+</html>

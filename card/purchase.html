@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Acheter des tickets PCS, Neosurf ou Transcach et recevoir les codes par e-mail." />
+  <meta name="theme-color" content="#0ea5a4" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' ry='16' fill='%230ea5a4'/%3E%3Ctext x='50' y='58' text-anchor='middle' font-size='56' font-family='Arial,Segoe UI,Roboto' fill='white'%3EA%3C/text%3E%3C/svg%3E" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Acheter — TicketStore" />
+  <meta property="og:description" content="Acheter des tickets PCS, Neosurf ou Transcach et recevoir les codes par e-mail." />
+  <meta name="twitter:card" content="summary" />
+  <title>Acheter - TicketStore</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><img src="img/logo.svg" alt="TicketStore" />TicketStore</div>
+      <div class="nav-wrap">
+        <button id="navToggle" class="nav-toggle" aria-label="Ouvrir le menu">Menu</button>
+        <nav class="nav" role="navigation" aria-label="Navigation principale">
+          <a href="index.html">Accueil</a>
+          <a href="activate.html">Activer</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="form-grid">
+      <div class="form-card">
+        <h2 id="purchaseHeading">Acheter un ticket</h2>
+        <!-- Formulaire envoie vers le backend: POST /api/purchase -->
+        <form id="purchaseForm" method="post" action="/api/purchase" novalidate aria-labelledby="purchaseHeading">
+          <div class="form-row">
+            <label for="type">Type de ticket</label>
+            <div class="brand-tiles" aria-hidden="true">
+              <figure>
+                <img src="img/ticket-pcs.svg" alt="PCS" />
+                <figcaption>PCS</figcaption>
+              </figure>
+              <figure>
+                <img src="img/ticket-neosurf.svg" alt="Neosurf" />
+                <figcaption>Neosurf</figcaption>
+              </figure>
+              <figure>
+                <img src="img/ticket-transcach.svg" alt="Transcach" />
+                <figcaption>Transcach</figcaption>
+              </figure>
+            </div>
+            <select id="type" name="type" required>
+              <option value="">-- Choisir --</option>
+              <option value="PCS">PCS</option>
+              <option value="NEOSURF">Neosurf</option>
+              <option value="TRANSCACH">Transcach</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label for="value">Montant</label>
+            <select id="value" name="value" required>
+              <option value="">-- Montant --</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="150">150</option>
+              <option value="250">250</option>
+              <option value="500">500</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label for="quantity">Quantité</label>
+            <input id="quantity" name="quantity" type="text" value="1" required />
+          </div>
+
+          <div class="form-row">
+            <label for="email">Votre e-mail</label>
+            <input id="email" name="email" type="email" placeholder="exemple@domaine.com" required />
+          </div>
+
+          <div style="display:flex; gap:10px; align-items:center; margin-top:8px;">
+            <button class="btn" type="submit">Valider l'achat</button>
+            <a class="btn secondary small" href="index.html">Annuler</a>
+          </div>
+        </form>
+
+        <p style="margin-top:12px; color:#64748b; font-size:0.9rem;">
+          *Le paiement réel doit être intégré côté serveur (ex: provider) ou traité manuellement côté admin.
+        </p>
+      </div>
+
+      <aside class="form-card">
+        <h3>Récapitulatif</h3>
+        <p style="color:#475569; line-height:1.5;">
+          Choisissez le type et la valeur du ticket. Après validation, vous recevrez un e-mail contenant le(s) code(s).
+        </p>
+        <hr style="margin:12px 0; border:none; border-top:1px solid #eef2ff;" />
+        <h4>Besoin d'aide ?</h4>
+        <p style="color:#64748b;">Contactez le support admin pour assistance.</p>
+      </aside>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Sécurité des transactions</h3>
+      <div class="grid-3">
+        <div class="card-soft">
+          <h4>Protection</h4>
+          <p>Nous utilisons des passerelles de paiement sécurisées et un chiffrement moderne.</p>
+        </div>
+        <div class="card-soft">
+          <h4>Suivi</h4>
+          <p>Chaque commande génère un e-mail récapitulatif avec les informations essentielles.</p>
+        </div>
+        <div class="card-soft">
+          <h4>Confidentialité</h4>
+          <p>Vos données ne sont jamais revendues et sont traitées de manière responsable.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Étapes détaillées</h3>
+      <ol style="padding-left:18px; color:#475569; line-height:1.6;">
+        <li>Sélectionnez le type et le montant du ticket.</li>
+        <li>Indiquez votre e-mail et validez l’achat.</li>
+        <li>Recevez immédiatement vos codes par e-mail.</li>
+        <li>Activez votre code depuis la page d’activation.</li>
+      </ol>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Ils nous font confiance</h3>
+      <div class="logo-row">
+        <div class="logo"><img src="img/logo-neopay.svg" alt="NeoPay" /></div>
+        <div class="logo"><img src="img/logo-transcash.svg" alt="TransCash" /></div>
+        <div class="logo"><img src="img/logo-securemail.svg" alt="SecureMail" /></div>
+        <div class="logo"><img src="img/logo-swiftpay.svg" alt="SwiftPay" /></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">FAQ</h3>
+      <div class="faq">
+        <details>
+          <summary>Comment choisir le bon montant ?</summary>
+          <p>Référez-vous aux conditions du service ciblé et à vos besoins.</p>
+        </details>
+        <details>
+          <summary>Le paiement est-il immédiat ?</summary>
+          <p>Oui. Si un délai survient, attendez quelques minutes puis contactez-nous.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Support</h3>
+      <div class="contact">
+        <p>Une question ? <a href="mailto:support@ticketstore.exemple">support@ticketstore.exemple</a></p>
+      </div>
+    </section>
+
+    <footer class="footer">© TicketStore</footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 40" width="140" height="40" role="img" aria-label="TransCash">
+  <rect width="140" height="40" rx="8" fill="#0b1220"/>
+  <text x="16" y="26" fill="#ffffff" font-family="Segoe UI, Arial, Roboto" font-size="18" font-weight="700">Trans</text>
+  <text x="80" y="26" fill="#ef4444" font-family="Segoe UI, Arial, Roboto" font-size="18" font-weight="700">Cash</text>
+</svg>
+

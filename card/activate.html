@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Activer un ticket PCS, Neosurf ou Transcach reçu par e-mail." />
+  <meta name="theme-color" content="#0ea5a4" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' ry='16' fill='%230ea5a4'/%3E%3Ctext x='50' y='58' text-anchor='middle' font-size='56' font-family='Arial,Segoe UI,Roboto' fill='white'%3EA%3C/text%3E%3C/svg%3E" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Activer — TicketStore" />
+  <meta property="og:description" content="Activer un ticket PCS, Neosurf ou Transcach reçu par e-mail." />
+  <meta name="twitter:card" content="summary" />
+  <title>Activer - TicketStore</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><img src="img/logo.svg" alt="TicketStore" />TicketStore</div>
+      <div class="nav-wrap">
+        <button id="navToggle" class="nav-toggle" aria-label="Ouvrir le menu">Menu</button>
+        <nav class="nav" role="navigation" aria-label="Navigation principale">
+          <a href="index.html">Accueil</a>
+          <a href="purchase.html">Acheter</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="form-card" style="max-width:640px; margin:0 auto;">
+      <h2 id="activateHeading">Activer un ticket</h2>
+
+      <!-- POST to /api/activate  -->
+      <form id="activateForm" method="post" action="/api/activate" novalidate aria-labelledby="activateHeading">
+        <div class="form-row">
+          <label for="code">Code du ticket</label>
+          <input id="code" name="code" type="text" placeholder="ABCD-1234-EFGH" required />
+        </div>
+
+        <div class="form-row">
+          <label for="email">Votre e-mail (optionnel)</label>
+          <input id="email" name="email" type="email" placeholder="exemple@domaine.com" />
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button class="btn" type="submit">Activer</button>
+          <a class="btn secondary small" href="index.html">Retour</a>
+        </div>
+      </form>
+
+      <p style="margin-top:12px; color:#64748b;">Après activation, un e-mail de confirmation sera envoyé si une adresse est fournie.</p>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Conseils d’activation</h3>
+      <div class="grid-3">
+        <div class="card-soft"><h4>Exactitude</h4><p>Copiez-collez le code pour éviter les erreurs de saisie.</p></div>
+        <div class="card-soft"><h4>Conservation</h4><p>Gardez l’e-mail contenant le code comme preuve d’achat.</p></div>
+        <div class="card-soft"><h4>Assistance</h4><p>En cas d’échec, contactez le support avec le code et l’heure.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Étapes</h3>
+      <ol style="padding-left:18px; color:#475569; line-height:1.6;">
+        <li>Collez votre code et vérifiez votre e-mail (optionnel).</li>
+        <li>Validez pour déclencher l’activation côté serveur.</li>
+        <li>Recevez un e-mail de confirmation si un e-mail est fourni.</li>
+      </ol>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">FAQ</h3>
+      <div class="faq">
+        <details>
+          <summary>Mon code est-il réutilisable ?</summary>
+          <p>Non, chaque code est à usage unique et consommé à l’activation.</p>
+        </details>
+        <details>
+          <summary>Que faire si le code est invalide ?</summary>
+          <p>Vérifiez l’orthographe, sinon contactez le support avec le reçu.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Support</h3>
+      <div class="contact">
+        <p>Besoin d’aide ? <a href="mailto:support@ticketstore.exemple">support@ticketstore.exemple</a></p>
+      </div>
+    </section>
+
+    <footer class="footer">© TicketStore</footer>
+  </div>
+</body>
+</html>
